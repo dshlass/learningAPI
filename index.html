@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>First API Call</title>
+</head>
+<body>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+        <button id="search">Search</button>
+        
+        <div>
+            <p id="temp"></p>
+        </div>
+
+</body>
+
+<script>
+   
+   var data = [];
+
+   async function apiCall(city) {
+    const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=899ed4da807b68a6031ba3bf3a5ba719`;
+
+    const response = await fetch(endpoint);
+    data = await response.json();
+
+
+    document.getElementById('temp').innerHTML = `The temperature in ${city} is ${data.main.temp}`;
+   }
+
+    const searchButton = document.getElementById("search");
+    searchButton.addEventListener("click", getCity);
+
+   function getCity() {
+    var inputCity = document.querySelector('#city').value;
+    apiCall(inputCity);
+   }
+
+</script>
+</html>
