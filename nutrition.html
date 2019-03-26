@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Nutrition API</title>
+		<title>Nutrition API</title>
+		<style>
+			a {
+				display: block;
+			}
+		</style>
 </head>
 <body>
 
-	<label for="food">City:</label>
-	<input type="text" id="food" name="food">
-	<button id="search">Search</button>
-	
+	<div>
+		<label for="food">Food Item:</label>
+		<input type="text" id="food" name="food">
+		<button id="search">Search</button>
+	</div>
+
+	<div id="display">
+
+	</div>
+
+	<div>
+		<button id="add">Add New Item</button>
+	</div>
+
 	<div>
 			<h3 id="title"></h3>
 			<ul>
@@ -27,6 +42,23 @@
 
 <script>
 // API DOCUMENTS https://docs.google.com/document/d/1_q-K-ObMTZvO0qUEAxROrN3bwMujwAN25sLHwJzliK0/edit#
+
+//Global Variable
+var data = [];
+var storedData = [];
+	//Adds event listener to the search button
+  const searchButton = document.getElementById("search");
+	searchButton.addEventListener("click", getCalories);
+
+
+	const addButton = document.getElementById("add");
+	addButton.addEventListener("click", storeRefresh);
+		
+	 //Function to get the user input and run the API call with that value
+  function getCalories() {
+  	var foodCalories = document.querySelector('#food').value;
+  	apiCall(foodCalories);
+  }
 
 //Function to call the API
 async function apiCall(a) {
@@ -48,6 +80,8 @@ async function apiCall(a) {
     const response = await fetch(endpoint, settings);
     data = await response.json();
 
+		console.log(data)
+
 		// console.log(data.common[0].full_nutrients);
 
 		//Sets the HTML to match the values
@@ -55,19 +89,54 @@ async function apiCall(a) {
 		document.getElementById('calories').innerHTML = `${data.common[0].full_nutrients[4].value} total calories`;
 		document.getElementById('protein').innerHTML = `${data.common[0].full_nutrients[0].value}g of protein`;
 		document.getElementById('fat').innerHTML = `${data.common[0].full_nutrients[1].value}g of fat`;
-		document.getElementById('carb').innerHTML = `${data.common[0].full_nutrients[3].value}g of carbs`;
+		document.getElementById('carb').innerHTML = `${data.common[0].full_nutrients[2].value}g of carbs`;
 	 
+		displaySearch();
 	}
 
-	//Adds event listener to the search button
-  const searchButton = document.getElementById("search");
-	searchButton.addEventListener("click", getCalories);
+
+	function storeRefresh(){		
+
+		storedData.push({
+			ingredient: data.common[0].food_name,
+			nutrition: {
+					calories: helperFunction(4), 
+					protein: helperFunction(0), 
+					fat: helperFunction(1), 
+					carbs: helperFunction(2)
+			}
+		});
 		
-	 //Function to get the user input and run the API call with that value
-  function getCalories() {
-  	var foodCalories = document.querySelector('#food').value;
-  	apiCall(foodCalories);
-  }
+		document.getElementById('food').value = '';
+
+
+	}
+
+	function helperFunction(index) {
+		return data.common[0].full_nutrients[index].value;
+	}
+
+function displaySearch() {
+	for (i=0;i<data.common.length; i++){
+
+
+		var node = document.createElement("a");                 // Create a <li> node
+		var textnode = document.createTextNode(`${data.common[i].food_name}`);         // Create a text node
+		node.appendChild(textnode); 
+		document.getElementById('display').appendChild(node);
+	}
+}
+
+
+
+
+
+//var obj = {ingredient:'Chicken', nutrition: {protein: 5, fat: 10}}
+
+
+
+
+
 
 </script>
 </html>
