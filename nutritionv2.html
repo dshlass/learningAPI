@@ -28,6 +28,7 @@
 var data = [];
 var displayData = [];
 var storedData = [];
+// var testObject= [];
 var displayStoredData = [];
 	
 
@@ -61,9 +62,12 @@ async function apiCall(input) {
 	//Fetching the data from the API using the settings required for access
   const response = await fetch(endpoint, settings);
   data = await response.json();
+
+
     
   //Displays the searched data below the search bar
   var displayData = data.common.map(function(obj){
+   console.log(obj);
     return `
       <li>
         <a class="name">${obj.food_name}</a>
@@ -72,11 +76,20 @@ async function apiCall(input) {
     `;
   }).join('');
   searchDisplay.innerHTML = displayData;
+
+  // var testDoc = document.querySelectorAll('.add');
+  //   for (let button of testDoc) {
+  //     button.addEventListener('click', Test)
+  //   }
+
 };
 
 //Adds selected food option to a new array and clears both the search bar and display options.
   function addFood(value, calories, protein, fat, carbs) {
-    storedData.push([value, calories, protein, fat, carbs]);
+  
+    // testObject.push(new Test(value, calories, protein, fat, carbs)); 
+    // console.log(testObject);
+      storedData.push([value, calories, protein, fat, carbs]);
     document.getElementById("food").value = "";
     displayData = [];
     searchDisplay.innerHTML = displayData;
@@ -96,6 +109,16 @@ async function apiCall(input) {
   storedDisplay.innerHTML = displayStoredData;
   }
 //consider making the display stored data an object so we can read the key value pairs better
+
+// function Test(foodName, calories, protein, fats, carbs) {
+//   this.name= foodName;
+//   this.calories = calories;
+//   this.protein = protein;
+//   this.fats = fats;
+//   this.carbs = carbs;
+  
+//   // console.log(this);
+// }
 
 </script>
 </html>
