@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+  	<div>
+        <label for="food">Food Item:</label>
+        <input type="text" id="food" name="food">
+        <button id="searchFood">Search</button>
+      </div>
+    
+      <div id="search-display">
+    
+      </div>
+
+      <div id="stored-display">
+    
+      </div>
+  
+</body>
+<script>
+
+//Global Variables
+var data = [];
+var displayData = [];
+var storedData = [];
+// var testObject= [];
+var displayStoredData = [];
+	
+var foodSearch = document.querySelector('#searchFood');
+foodSearch.addEventListener("click", getFood);
+
+
+//Reads the input and searches in real time
+function getFood() {
+ var input = document.querySelector('#food').value;
+  apiCall(input);
+}
+
+
+ //Selectors for the display area 
+  var searchDisplay = document.getElementById("search-display");
+  var storedDisplay = document.getElementById("stored-display");
+
+
+//Function to call the API
+async function apiCall(input) {
+
+	//URL for the API
+	var endpoint = `https://trackapi.nutritionix.com/v2/search/instant?query=${input}&branded=false&detailed=true`;
+
+	//These are the required headers for access to the API
+  const settings = {
+    method: 'GET',
+    headers: {
+      'x-app-id': "9bd01d74",
+      'x-app-key':"805b43410778cb82dab4a3147801c6d7" 
+    }
+  };
+		
+	//Fetching the data from the API using the settings required for access
+  const response = await fetch(endpoint, settings);
+  data = await response.json();
+
+  for (let foodItem of data.common) {
+  var btn = document.createElement('button');
+  btn.innerHTML = foodItem.food_name;
+  btn.onclick = function() {
+    console.log('clicked');
+    searchDisplay.innerHTML = [];
+    storedData.push(foodItem);
+  }
+  searchDisplay.appendChild(btn);
+}
+
+};
+
+
+</script>
+</html>
