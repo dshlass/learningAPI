@@ -1,145 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-  </head>
 
-  <body>
-    <div>
-      <label for="food">Food Item:</label>
-      <input type="text" id="food" name="food" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Nutrition</title>
+</head>
 
-      <label for="quantity">Grams:</label>
-      <input type="number" id="quantity" name="quantity" min="0" />
+<body>
 
-      <button id="searchFood">Search</button>
-    </div>
+  <div>
+    <label for="food">Food Item:</label>
+    <input type="text" id="food" name="food">
 
-    <div id="search-display"></div>
+    <label for="quantity">Grams:</label>
+    <input type="number" id="quantity" name="quantity" min="0">
 
-    <div id="stored-display"></div>
+    <button id="searchFood">Search</button>
+  </div>
 
-    <div id="totals-display"></div>
-  </body>
-  <script>
-    //Global Variables
-    var data = [];
-    var storedData = [];
-    var displayStoredData = [];
+  <div id="search-display"></div>
 
-    var foodSearch = document.querySelector("#searchFood");
-    foodSearch.addEventListener("click", getFood);
+  <div id="stored-display"></div>
 
-    //Reads the input and searches in real time
-    function getFood() {
-      var input = document.querySelector("#food").value;
-      var quantity = document.querySelector("#quantity").value;
-      apiCall(input, quantity);
-    }
+  <div id="totals-display"></div>
 
-    //Selectors for the display area
-    var searchDisplay = document.getElementById("search-display");
-    var storedDisplay = document.getElementById("stored-display");
-    var totalsDisplay = document.getElementById("totals-display");
+</body>
+<script>
 
-    //Function to call the API
-    async function apiCall(input, quantity) {
-      //URL for the API
-      var endpoint = `https://trackapi.nutritionix.com/v2/search/instant?query=${input}&branded=false&detailed=true`;
+  //Global Variables
+  var data = [];
+  var storedData = [];
+  var displayStoredData = [];
 
-      //These are the required headers for access to the API
-      const settings = {
-        method: "GET",
-        headers: {
-          "x-app-id": "9bd01d74",
-          "x-app-key": "805b43410778cb82dab4a3147801c6d7"
-        }
-      };
+  //Selectors for the display area 
+  var searchDisplay = document.getElementById("search-display");
+  var storedDisplay = document.getElementById("stored-display");
+  var totalsDisplay = document.getElementById("totals-display");
 
-      //Fetching the data from the API using the settings required for access
-      const response = await fetch(endpoint, settings);
-      data = await response.json();
+  var foodSearch = document.querySelector('#searchFood');
+  foodSearch.addEventListener("click", getFood);
 
-      //Displays the searched food as buttons
-      for (let foodItem of data.common) {
-        var btn = document.createElement("button");
-        btn.innerHTML = foodItem.food_name;
+  //Reads the input and searches in real time
+  function getFood() {
+    var input = document.querySelector('#food').value;
+    var quantity = document.querySelector('#quantity').value;
+    searchDisplay.innerHTML = [];
+    apiCall(input, quantity);
+  }
 
-        btn.onclick = function() {
-          searchDisplay.innerHTML = [];
-          storedData.push([foodItem, quantity]);
-          displayData();
-        };
-        searchDisplay.appendChild(btn);
+  //Function to call the API
+  async function apiCall(input, quantity) {
+    //URL for the API
+    var endpoint = `https://trackapi.nutritionix.com/v2/search/instant?query=${input}&branded=false&detailed=true`;
+    //These are the required headers for access to the API
+    const settings = {
+      method: 'GET',
+      headers: {
+        'x-app-id': "9bd01d74",
+        'x-app-key': "805b43410778cb82dab4a3147801c6d7"
       }
-    } //End of async function
+    };
 
-    //Display the search data
-    function displayData() {
-      var storedItem = document.createElement("li");
-      var totalNutrition = [];
+    //Fetching the data from the API using the settings required for access
+    const response = await fetch(endpoint, settings);
+    data = await response.json();
+    //Displays the searched food as buttons
+    for (let foodItem of data.common) {
 
-      for (let element of storedData) {
-        storedItem.innerHTML = `${element[0].food_name} with ${
-          element[1]
-        } grams which accoutns for ${calculateCals(element)[0]} calories.`;
-        totalNutrition.push(calculateCals(element));
+      var btn = document.createElement('button');
+      btn.innerHTML = foodItem.food_name;
+
+      btn.onclick = function () {
+        searchDisplay.innerHTML = [];
+        storedData.push([foodItem, quantity]);
+        displayData();
       }
 
-      storedDisplay.appendChild(storedItem);
+      searchDisplay.appendChild(btn);
+    }
 
-      var calsAccumulated = [0, 0, 0, 0];
-      for (let i of totalNutrition) {
-        calsAccumulated[0] += i[0];
-        calsAccumulated[1] += i[1];
-        calsAccumulated[2] += i[2];
-        calsAccumulated[3] += i[3];
+  }; //End of async function
+
+  //Display the search data
+  function displayData() {
+    var storedItem = document.createElement('li');
+
+    newestData = storedData[storedData.length - 1];
+    storedItem.innerHTML = `${newestData[0].food_name} with ${newestData[1]} grams which accoutns for ${calculateCals(newestData)[0]} calories.`;
+    storedDisplay.appendChild(storedItem);
+
+    totalNutrition = storedData.map(i => calculateCals(i));
+
+    calsAccumulated = totalNutrition.reduce(function (a, b) {
+      return a.map(function (a, i) {
+        return a + b[i];
+      });
+    });
+
+    totalsDisplay.innerHTML = `Total Calories: ${calsAccumulated[0]}, Total Fat: ${calsAccumulated[1]}, Total Protein: ${calsAccumulated[2]}, Total Carbs: ${calsAccumulated[3]}`;
+  }
+
+  //Caluclates the calories based on the Grams input
+  function calculateCals(inputPair) {
+
+    var servingGrams = inputPair[0].serving_weight_grams;
+
+    var nutritionIndex = [208, 2014, 203, 205]; //cals, fat, protein, carbs
+
+    calculated = nutritionIndex.map(i => Math.ceil(getNutrition(inputPair[0], i) / servingGrams * inputPair[1]));
+
+    return calculated;
+  }
+
+  function getNutrition(foodItem, attributeNumber) {
+    var nutritionValue = 0
+    for (let element of foodItem.full_nutrients) {
+      if (element.attr_id === attributeNumber) {
+        nutritionValue = element.value
       }
-
-      totalsDisplay.innerHTML = `Total Calories: ${
-        calsAccumulated[0]
-      }, Total Fat: ${calsAccumulated[1]}, Total Protein: ${
-        calsAccumulated[2]
-      }, Total Carbs: ${calsAccumulated[3]}`;
     }
+    return nutritionValue
+  }
 
-    //Caluclates the calories based on the Grams input
-    function calculateCals(inputPair) {
-      // var caloriesPerServicing = getNutrition(inputPair[0],208); // selecting calories
-      // var caloriesPerServicing = getNutrition(inputPair[0],204); // selecting fat
-      // var caloriesPerServicing = getNutrition(inputPair[0],203); // selecting protein
-      // var caloriesPerServicing = getNutrition(inputPair[0],205); // selecting carbs
-      var servingGrams = inputPair[0].serving_weight_grams;
+</script>
 
-      return [
-        Math.ceil(
-          (getNutrition(inputPair[0], 208) / servingGrams) * inputPair[1]
-        ),
-        Math.ceil(
-          (getNutrition(inputPair[0], 204) / servingGrams) * inputPair[1]
-        ),
-        Math.ceil(
-          (getNutrition(inputPair[0], 203) / servingGrams) * inputPair[1]
-        ),
-        Math.ceil(
-          (getNutrition(inputPair[0], 205) / servingGrams) * inputPair[1]
-        )
-      ];
-    }
-
-    function getNutrition(foodItem, attributeNumber) {
-      var nutritionValue = 0;
-
-      for (let element of foodItem.full_nutrients) {
-        if (element.attr_id === attributeNumber) {
-          nutritionValue = element.value;
-        }
-      }
-
-      return nutritionValue;
-    }
-  </script>
 </html>
