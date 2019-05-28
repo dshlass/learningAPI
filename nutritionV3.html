@@ -26,6 +26,9 @@
 
   <div id="totals-display"></div>
 
+  <div id="buttons-display"></div>
+
+
 </body>
 <script>
 
@@ -38,6 +41,8 @@
   var searchDisplay = document.getElementById("search-display");
   var storedDisplay = document.getElementById("stored-display");
   var totalsDisplay = document.getElementById("totals-display");
+  var buttonsDisplay = document.getElementById("buttons-display");
+
 
   var foodSearch = document.querySelector('#searchFood');
   foodSearch.addEventListener("click", getFood);
@@ -49,6 +54,19 @@
     searchDisplay.innerHTML = [];
     apiCall(input, quantity);
   }
+
+//CRUD DISPLAY
+  let myMeals = document.createElement('button');
+   myMeals.innerHTML = "My Meals"
+
+  myMeals.onclick = function () {
+    console.log('Hello World');
+  };
+
+  buttonsDisplay.appendChild(myMeals);
+
+
+
 
   //Function to call the API
   async function apiCall(input, quantity) {
@@ -85,6 +103,17 @@
 
   //Display the search data
   function displayData() {
+    if (storedData.length > 0) {
+      let saveList = document.createElement('button');
+      saveList.innerHTML = "Save Meal"
+
+      saveList.onclick = function () {
+        console.log('Hello World');
+      };
+      
+      buttonsDisplay.appendChild(saveList);
+    }
+
     var storedItem = document.createElement('li');
 
     newestData = storedData[storedData.length - 1];
@@ -100,6 +129,8 @@
     });
 
     totalsDisplay.innerHTML = `Total Calories: ${calsAccumulated[0]}, Total Fat: ${calsAccumulated[1]}, Total Protein: ${calsAccumulated[2]}, Total Carbs: ${calsAccumulated[3]}`;
+
+  
   }
 
   //Caluclates the calories based on the Grams input
@@ -110,7 +141,6 @@
     var nutritionIndex = [208, 2014, 203, 205]; //cals, fat, protein, carbs
 
     calculated = nutritionIndex.map(i => Math.ceil(getNutrition(inputPair[0], i) / servingGrams * inputPair[1]));
-
     return calculated;
   }
 
