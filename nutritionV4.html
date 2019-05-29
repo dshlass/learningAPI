@@ -77,6 +77,7 @@
   let storedData = [];
   let displayStoredData = [];
   let accumulatedData = [];
+  let storedMeals = [];
 
   //Selectors for the display area 
   const searchDisplay = document.getElementById("search-display");
@@ -88,18 +89,15 @@
   foodSearch.addEventListener("click", getFood);
 
 
-  //CRUD DISPLAY
+  //Displays the storedMeals
     let myMeals = document.createElement('button');
     myMeals.innerHTML = "My Meals"
 
     myMeals.onclick = function () {
-      console.log('Hello World');
+      console.log(storedMeals);
     };
 
     buttonsDisplay.appendChild(myMeals);
-
-
-
 
 
   //Reads the input and searches in real time
@@ -130,7 +128,6 @@
 //Creates a Button element for each search result. When clicked will add the food item to the storedData array.
     for (let item of data.common) { 
 
-      
       let pair = document.createElement('div');
       pair.className = 'display-pair'
       
@@ -146,14 +143,11 @@
         searchDisplay.innerHTML = [];
 
         const foodItem = new FoodItem(item,quantity);
-        // const testValue = new StoredData(item);
         storedData.push(foodItem);
 
-
-        
         displayData(foodItem, quantity);
-        // deleteItem(foodItem);
       }
+
     searchDisplay.appendChild(pair);
     pair.appendChild(searchDisplayLabel);
     pair.appendChild(searchDisplayButton);
@@ -183,7 +177,7 @@ class FoodItem {
           for (let x of this.nutrients) {
             if (x.attr_id === i) {
               nutritionValue = x.value;
-              nutrition.push((Math.floor(nutritionValue / this.serving_weight_grams * this.quantity) ));
+              nutrition.push(Math.floor(nutritionValue / this.serving_weight_grams * this.quantity));
             }
           }
         })
@@ -191,7 +185,6 @@ class FoodItem {
       }
     });
   } // End of Constructor
-
   
 };//End of FoodItem Class
 
@@ -204,7 +197,6 @@ function calculateTotals() {
       return accumulatedData;
     
     } else {
-
       //Creates an array of Accumulated Data
       let mainFourArray = storedData.map(i => i.mainFour);
 
@@ -220,7 +212,7 @@ function calculateTotals() {
 
 
 //Function that displays the data
-//THIS FUNCTION NEEDS TO BE RESTRUCTURED INTO A CLASS I THINK???
+//THIS FUNCTION NEEDS TO BE RESTRUCTURED FROM SPAGHETTI CODE!!
 function displayData(food, quantity) {
 
       let storedItemPair = document.createElement('div');
@@ -256,7 +248,7 @@ function displayData(food, quantity) {
         totalsDisplay.innerHTML = `Total Calories: ${accumulatedData[0]}, Total Fat: ${accumulatedData[1]}, Total Protein: ${accumulatedData[2]}, Total Carbs: ${accumulatedData[3]}`;
         
         //If there are no more values in the storedData array the save list button will be removed.
-        if (storedData.length === 0) {
+        if (!storedData.length) {
           buttonsDisplay.removeChild(buttonsDisplay.childNodes[1]);
         }
       }; // End of Delete Button Functionality
@@ -269,17 +261,18 @@ function displayData(food, quantity) {
         let saveList = document.createElement('button');
         saveList.innerHTML = "Save Meal"
 
+        //Saves the meal information, clears the current displayed meal and totals.
         saveList.onclick = function () {
             let date = new Date();
             const savedMeal = new StoredMeals(date, storedData);
             storedMeals.push(savedMeal);
-            console.log(storedMeals);
             storedData = [];
             storedDisplay.innerHTML = "";
             totalsDisplay.innerHTML = '';
 
-                    if (storedData.length === 0) {
-            buttonsDisplay.removeChild(buttonsDisplay.childNodes[1]);
+            //Removes the Save List button once clicked.
+            if (!storedData.length) {
+              buttonsDisplay.removeChild(buttonsDisplay.childNodes[1]);
           }
         };
 
@@ -288,32 +281,15 @@ function displayData(food, quantity) {
       }
   }; // End of Display Data Function
 
-// function  deleteItem(food) {
-  //   let deleteItem = document.createElement('button')
-  //   deleteItem.innerHTML = "-"
-
-  //   deleteItem.onclick = function () {
-  //     let pos = storedData.indexOf(food);
-
-  //     storedData.splice(pos, 1);
-  //     storedDisplay.removeChild(storedDisplay.childNodes[pos]);
-  //     displayData(food, quantity);
-  //   };
-
-  //   storedItemPair.appendChild(deleteItem);
-  // }
-
-let storedMeals = [];
-
+//Maybe add more information to the array
 class StoredMeals {
 
   constructor(date, savedMeal) {
     this.date = [(date.getMonth() + 1), date.getDate(), date.getFullYear()],
     this.storedItems = savedMeal
-  }//End of Constructor
-
-}; //End of Stored Meals
-
+    this.id = (storedMeals.length+1);
+  }//end of Constructor
+}//End of Stored Meals
 
 
 </script>
