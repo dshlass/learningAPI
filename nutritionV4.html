@@ -166,26 +166,25 @@ class FoodItem {
     this.serving_unit = food.serving_unit,
     this.quantity = quantity
     
-    //Returns the Calories, Fats, Protein and Carbs in an array.  
-    Object.defineProperty(this, 'mainFour', { 
-      get: function() {
-        let nutrition = []; //Empty array to store the 
-        let nutritionIndex = [208, 204, 203, 205]; //cals, fat, protein, carbs
-        let nutritionValue = 0;
-
-        nutritionIndex.map(i => {
-          for (let x of this.nutrients) {
-            if (x.attr_id === i) {
-              nutritionValue = x.value;
-              nutrition.push(Math.floor(nutritionValue / this.serving_weight_grams * this.quantity));
-            }
-          }
-        })
-        return nutrition;
-      }
-    });
+  
   } // End of Constructor
   
+  //Returns the Calories, Fats, Protein and Carbs in an array.  
+  get mainFour() {
+    let nutrition = []; //Empty array to store the 
+    let nutritionIndex = [208, 204, 203, 205]; //cals, fat, protein, carbs
+    let nutritionValue = 0;
+
+    nutritionIndex.map(i => {
+      for (let x of this.nutrients) {
+        if (x.attr_id === i) {
+          nutritionValue = x.value;
+          nutrition.push(Math.floor(nutritionValue / this.serving_weight_grams * this.quantity));
+        }
+      }
+    })
+    return nutrition;
+  }
 };//End of FoodItem Class
 
 
@@ -267,7 +266,7 @@ function displayData(food, quantity) {
             const savedMeal = new StoredMeals(date, storedData);
             storedMeals.push(savedMeal);
             storedData = [];
-            storedDisplay.innerHTML = "";
+            storedDisplay.innerHTML = '';
             totalsDisplay.innerHTML = '';
 
             //Removes the Save List button once clicked.
