@@ -3,6 +3,7 @@ import {FoodCardProps} from "./FoodCard.interface";
 
 //Redux
 import { addFoodItem } from "../../../actions/addFoodItem";
+import { clearFetchedItems } from "../../../actions/fetchFoodItem";
 import { connect } from "react-redux";
 
 
@@ -10,7 +11,11 @@ const FoodCard: React.FC<{item: FoodCardProps}> = (props:any) => {
 
   const handleAddItem = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
+    //adds new item to the list
     props.addFoodItem(props.item)
+
+    //clears the search after food item is added
+    props.clearFetchedItems()
   }
 
   return (
@@ -30,4 +35,4 @@ const mapStateToProps = (state: any) => {
   return { results: state.foodItem };
 };
 
-export default connect(mapStateToProps, { addFoodItem })(FoodCard);
+export default connect(mapStateToProps, { addFoodItem, clearFetchedItems })(FoodCard);
