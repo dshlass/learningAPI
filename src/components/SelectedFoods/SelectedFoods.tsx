@@ -1,61 +1,34 @@
-import React, { useState, useEffect } from 'react';
-// import FoodCard from './FoodCard/FoodCard';
-// import { FoodCardProps } from './FoodCard/FoodCard.interface';
-
-const SearchFood: React.FC = () => {
-  const [state, setState] = useState('');
-  const [results, setResults] = useState([]);
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setState(value);
-  };
-
-  useEffect(() => {
-    getFood(state);
-  }, [state]);
-
-  const getFood = async (state: string) => {
-    const endpoint = `https://trackapi.nutritionix.com/v2/search/instant?query=${state}&branded=false&detailed=true`;
-    const settings = {
-      method: "GET",
-      headers: {
-        "x-app-id": "03f178a1",
-        "x-app-key": "7b9393e1f1aa285fe2a0ac904110c620"
-      }
-    };
-    const response = await fetch(endpoint, settings);
-    const data = await response.json();
-    // console.log(data.common);
-    setResults(data.common || []);
-  };
-  console.log(results)
-
-  // const displayResults = (results: FoodCardProps[]) => {
-  //   console.log(results)
-  //   return results.length > 0
-  //     ? results.map((item: FoodCardProps, index: number) => (
-  //       <div key={index}>
-  //         <FoodCard item={item} />
-  //       </div>
-  //     ))
-  //     : null;
-  // };
+import React  from 'react';
+import { FoodCardProps } from '../SearchFood/FoodCard/FoodCard.interface';
 
 
+//Redux implementation
+import { addFoodItem } from "../../actions/addFoodItem";
+import { connect } from "react-redux";
+
+
+const SelectedFoods: React.FC = (props: any) => {
+  const addDisplay = (foodItems: FoodCardProps[]) => {
+    return (foodItems.length > 0) ?
+      foodItems.map((item: FoodCardProps, index: number) => (
+      <li key={index}>
+        {item.food_name}
+      </li>
+    )) : null
+  }
 
   return (
     <>
-      <input
-        type="text"
-        name="searchFood"
-        id="searchFood"
-        value={state}
-        onChange={event => handleSearch(event)}
-      />
-      {/* {displayResults(results)} */}
+      {addDisplay(props.addedItems)}
     </>
   );
 };
 
-export default SearchFood
+//Redux implementation
+const mapStateToProps = (state: any) => {
+  return { addedItems: state.addedItems };
+};
+
+export default connect(mapStateToProps, { addFoodItem })(SelectedFoods);
+
+

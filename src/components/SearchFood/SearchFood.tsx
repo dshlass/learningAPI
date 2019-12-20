@@ -4,7 +4,7 @@ import FoodCard from './FoodCard/FoodCard';
 import { FoodCardProps } from './FoodCard/FoodCard.interface';
 
 //Redux implementation
-import { fetchFoodItem } from "../../actions";
+import { fetchFoodItem } from "../../actions/fetchFoodItem";
 import { connect } from "react-redux";
 
 
@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 const SearchFood: React.FC = (props:any) => {
   const [food, setFood] = useState('');
 
-  console.log(props)
+  // console.log(props)
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setFood(value);
@@ -52,7 +52,7 @@ const SearchFood: React.FC = (props:any) => {
 
 //Redux implementation
 const mapStateToProps = (state: any) => {
-  console.log(state.foodItem)
+  // console.log(state.foodItem)
   return { results: state.foodItem };
 };
 
