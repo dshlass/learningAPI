@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from 'react';
 import React, { useState } from 'react';
 import FoodCard from './FoodCard/FoodCard';
-import { FoodCardProps } from './FoodCard/FoodCard.interface';
+import { FoodCardProps } from '../../interface/FoodCard.interface';
 
 //Redux implementation
 import { fetchFoodItem } from "../../actions/fetchFoodItem";

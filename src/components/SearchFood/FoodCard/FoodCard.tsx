@@ -1,5 +1,5 @@
 import React from "react";
-import {FoodCardProps} from "./FoodCard.interface";
+import {FoodCardProps} from "../../../interface/FoodCard.interface";
 
 //Redux
 import { addFoodItem } from "../../../actions/addFoodItem";
@@ -12,6 +12,7 @@ const FoodCard: React.FC<{item: FoodCardProps}> = (props:any) => {
   const handleAddItem = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
     //adds new item to the list
+    
     props.addFoodItem(props.item)
 
     //clears the search after food item is added

@@ -1,10 +1,11 @@
 import { ADD_FOOD_ITEM } from '../actions/types'
+import {nutritionMap} from '../nutritionMap/nutritionMap'
 // import { FoodCardProps } from '../actions/addFoodItem'
-
 // export interface actionInterface {
 //   type: String,
 //   payload: any;
 // }
+
 
 /**
  * Typically we don't want to mutate state inside of
@@ -16,10 +17,13 @@ import { ADD_FOOD_ITEM } from '../actions/types'
 export default (state = [], action) => {
   switch (action.type) {
     case ADD_FOOD_ITEM: {
-      // return [...state, action.payload]
-      return [...state, action.payload]
-    }
+        return [...state, action.payload]
+      }
+
     default:
       return state
   }
 }
+
+
+//compare the two arrays
