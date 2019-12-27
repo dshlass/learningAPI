@@ -17,7 +17,21 @@ import {nutritionMap} from '../nutritionMap/nutritionMap'
 export default (state = [], action) => {
   switch (action.type) {
     case ADD_FOOD_ITEM: {
-        return [...state, action.payload]
+        const test = action.payload.full_nutrients
+        const newNutrition = []
+        for (let x of test) {
+          for (let y of nutritionMap) {
+            if (x.attr_id === y.attr_id) {
+              newNutrition.push({
+                value: x.value,
+                name: y.name,
+                unit: y.unit
+              })
+            }
+          }
+        }
+        const newState = {...action.payload, full_nutrients: newNutrition}
+      return [...state, newState]
       }
 
     default:

@@ -1,5 +1,5 @@
 import React  from 'react';
-import { FoodCardProps } from '../../interface/FoodCard.interface'
+import { FoodCardProps, AddFoodItem } from '../../interface/FoodCard.interface'
 import FoodBar from './FoodBar/FoodBar'
 
 //Redux implementation
@@ -13,7 +13,7 @@ const SelectedFoods: React.FC = (props: any) => {
 
   const addDisplay = (foodItems: FoodCardProps[]) => {
     return (foodItems.length > 0) ?
-      foodItems.map((item: FoodCardProps, index: number) => (
+      foodItems.map((item: FoodCardProps | AddFoodItem, index: number) => (
       <FoodBar key={index} item={item}/>
     )) : null
   }

@@ -1,0 +1,13 @@
+.search {
+  &__name {
+    font-size: 1rem;
+  }
+
+  &__nutrients {
+    display: flex;
+  }
+
+  &__nutrient {
+    margin-right: 10px;
+  }
+}

@@ -9,14 +9,14 @@ const FoodBar = (props:any) => {
   const [hover, isHover] = useState(false)
 
   const handleHover = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    (!hover) ? isHover(true) : isHover(false)
+    isHover(!hover)
   }
 
   const handleAdditionalDisplay = () => {
     return (hover) ? props.item.full_nutrients.map((item:any, index:number) => {
       return (
       <li key={index}>
-          <p>id: {item.attr_id}, value: {item.value}</p>
+        <p>{item.name}, value: {item.value}{item.unit}</p>
       </li>
       )
     }) :
